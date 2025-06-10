@@ -1,4 +1,6 @@
+import { link } from 'fs';
 import React from 'react';
+import Link from 'next/link'; 
 
 export default function EventCard(props: any) {
   const { event, Cart } = props;
@@ -37,6 +39,20 @@ export default function EventCard(props: any) {
           Price: ${event.price_min.toFixed(2)} – ${event.price_max.toFixed(2)}
         </p>
         <button onClick={addToCart}>Add to Cart</button>
+        <Link
+          href={`/events/${event.id}`}
+          style={{
+            display: 'inline-block',
+            marginLeft: '1rem',
+            padding: '0.5rem 1rem',
+            background: '#86af49',
+            color: '#fff',
+            borderRadius: 6,
+            textDecoration: 'none',
+          }}
+        >
+          View details
+        </Link>
       </div>
     </div>
   );

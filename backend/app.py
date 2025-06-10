@@ -37,5 +37,35 @@ def get_all_events():
 
     return jsonify(events)
 
+@app.route('/events/<string:event_id>', methods=['GET'])
+def get_event(event_id):
+    url = f"https://app.ticketmaster.com/discovery/v2/events/{event_id}.json?apikey={API_KEY}"
+    res = requests.get(url)
+
+    if res.status_code != 200:
+        return jsonify({'error': 'Event not found'}), 404
+
+    e = res.json()     # the single-event payload
+
+    # Build the same shape your /events/all endpoint returns for each item
+    event = {
+        "id": e["id"],
+        "name": e["name"],
+        "date": e["dates"]["start"].get("localDate", "TBA"),
+        "start_time": e["dates"]["start"].get("localTime", "TBA"),
+        "end_time": e.get("dates", {}).get("end", {}).get("localTime", "TBA"),
+        "venue": (
+            e["_embedded"]["venues"][0]["name"]
+            if "_embedded" in e and "venues" in e["_embedded"]
+            else "TBA"
+        ),
+        "info": e.get("info") or e.get("pleaseNote", ""),
+        "image": e["images"][0]["url"] if e.get("images") else "",
+        "price_min": e.get("priceRanges", [{}])[0].get("min", 0),
+        "price_max": e.get("priceRanges", [{}])[0].get("max", 0),
+    }
+
+    return jsonify(event)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

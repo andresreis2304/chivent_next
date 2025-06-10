@@ -1,12 +1,10 @@
 'use client';
-
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 
-// Define the type for a single event
 type Event = {
-  id: number;
+  id: string;                //string, not number
   name: string;
   date: string;
   start_time: string;
@@ -18,43 +16,37 @@ type Event = {
   price_max: number;
 };
 
-// Props expected from parent (likely passed down via a wrapper layout or context)
-type EventPageProps = {
-  events: Event[];
-  Cart: ReturnType<typeof import('@/context/useCart').default>;
-};
-
 export default function EventPage(props: any) {
-  const { events, Cart } = props;
+  const { Cart } = props;
   const { cart, setCart } = Cart;
+  const router = useRouter();
 
-  const { id } = useParams();
-  const numericId = Number(id);
-
-  const [event, setEvent] = useState<Event | null>(null);
+  const [event, setEvent]   = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  /* fetch once router is ready */
   useEffect(() => {
-    const local = events.find((e) => e.id === numericId);
+    if (!router.isReady) return;
 
-    if (local) {
-      setEvent(local);
+    const idParam = router.query.id;
+    if (typeof idParam !== 'string') {
+      setNotFound(true);
       setLoading(false);
       return;
     }
 
-    fetch(`http://127.0.0.1:5000/event/${numericId}`)
-      .then((res) => {
+    fetch(`http://127.0.0.1:5000/events/${encodeURIComponent(idParam)}`)   // string id
+      .then(res => {
         if (!res.ok) throw new Error('404');
         return res.json();
       })
-      .then((data) => setEvent(data))
+      .then(setEvent)
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
-  }, [numericId, events]);
+  }, [router.isReady, router.query.id]);
 
-  const totalItems = cart.reduce((sum, e) => sum + e.quantity, 0);
+  const totalItems = cart.reduce((s: any, e: any) => s + e.quantity, 0);
 
   const addToCart = () => {
     if (cart.some(e => e.id === event?.id)) {
@@ -66,6 +58,7 @@ export default function EventPage(props: any) {
     }
   };
 
+  /* render states  */
   if (loading) {
     return (
       <div style={{ width: '100vw' }}>
@@ -88,38 +81,21 @@ export default function EventPage(props: any) {
     );
   }
 
+  /*success view */
   return (
     <div style={{ width: '100vw' }}>
       <Navbar cartCount={totalItems} />
-      <div
-        style={{
-          padding: '2rem',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '1rem',
-        }}
-      >
+      <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', gap: '1rem' }}>
         <h1>{event.name}</h1>
 
-        <img
-          src={event.image}
-          alt={event.name}
-          style={{ width: 300, height: 300, objectFit: 'cover' }}
-        />
+        <img src={event.image} alt={event.name}
+             style={{ width: 300, height: 300, objectFit: 'cover' }} />
 
-        <p>
-          <strong>Date:</strong> {event.date}
-        </p>
-        <p>
-          <strong>Start:</strong> {event.start_time}
-        </p>
-        <p>
-          <strong>End:</strong> {event.end_time}
-        </p>
-        <p>
-          <strong>Venue:</strong> {event.venue}
-        </p>
+        <p><strong>Date:</strong> {event.date}</p>
+        <p><strong>Start:</strong> {event.start_time}</p>
+        <p><strong>End:</strong> {event.end_time}</p>
+        <p><strong>Venue:</strong> {event.venue}</p>
 
         {event.price_min !== null && (
           <p style={{ fontSize: '1rem', color: 'gray' }}>
@@ -128,9 +104,7 @@ export default function EventPage(props: any) {
           </p>
         )}
 
-        <p style={{ maxWidth: 600 }}>
-          <strong>Info:</strong> {event.info}
-        </p>
+        <p style={{ maxWidth: 600 }}><strong>Info:</strong> {event.info}</p>
 
         <button onClick={addToCart}>Add to Cart</button>
       </div>
