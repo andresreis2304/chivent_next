@@ -1,37 +1,15 @@
 'use client';
+import Navbar from '@/components/Navbar';
 
-import Navbar from '../../components/Navbar';
-import { useCart } from '../../context/CartContext';
+export default function CartPage(props: any) {
+  const { Cart } = props;
+  const { cart, handleAddOne, handleRemoveOne, handleRemoveAll } = Cart;
 
-export default function Cart() {
-  const { cart, setCart } = useCart();
-  console.log('Cart contents:', cart); // Debugging log
-
-  const handleAddOne = (id: number) => {
-    const updated = cart.map((e) =>
-      e.id === id ? { ...e, quantity: e.quantity + 1 } : e
-    );
-    setCart(updated);
-  };
-
-  const handleRemoveOne = (id: number) => {
-    const updated = cart
-      .map((e) =>
-        e.id === id ? { ...e, quantity: e.quantity - 1 } : e
-      )
-      .filter((e) => e.quantity > 0);
-    setCart(updated);
-  };
-
-  const handleRemoveAll = (id: number) => {
-    setCart(cart.filter((e) => e.id !== id));
-  };
-
-  const totalItems = cart?.reduce((sum, e) => sum + e.quantity, 0) || 0;
+  const total = cart.reduce((s, e) => s + e.quantity, 0);
 
   return (
     <div style={{ width: '100vw', boxSizing: 'border-box', margin: 0 }}>
-      <Navbar cartCount={totalItems} />
+      <Navbar cartCount={total} />
       <div style={{ paddingTop: '2rem', padding: '2rem', textAlign: 'center' }}>
         <h1>Your Cart</h1>
 
@@ -62,9 +40,9 @@ export default function Cart() {
                 <p style={{ margin: 0 }}>{e.date} • {e.place}</p>
                 <p style={{ margin: '0.25rem 0 0 0' }}>Qty: {e.quantity}</p>
               </div>
-              <button onClick={() => handleAddOne(e.id)}>+</button>
-              <button onClick={() => handleRemoveOne(e.id)}>-</button>
-              <button onClick={() => handleRemoveAll(e.id)}>Remove</button>
+              <button onClick={() => Cart.handleAddOne(e.id)}>+</button>
+              <button onClick={() => Cart.handleRemoveOne(e.id)}>-</button>
+              <button onClick={() => Cart.handleRemoveAll(e.id)}>Remove</button>
             </div>
           ))
         )}

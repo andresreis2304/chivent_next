@@ -1,12 +1,16 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { use } from 'react';
 
 type NavbarProps = {
   cartCount: number;
 };
 
 export default function Navbar({ cartCount }: NavbarProps) {
+  const Router = useRouter();
+
   return (
     <nav
       style={{
@@ -30,7 +34,9 @@ export default function Navbar({ cartCount }: NavbarProps) {
       </div>
 
       <div>
-        <Link href="/cart" style={{ color: 'white', textDecoration: 'none' }}>
+        <Link onClick={(e)=>{
+          e.preventDefault()
+          Router.push('/cart')}} href="/cart" style={{ color: 'white', textDecoration: 'none' }}>
           🛒
         </Link>
         <span style={{ marginLeft: '0.5rem' }}>

@@ -1,33 +1,12 @@
 import React from 'react';
 
-export type Event = {
-  id: number;
-  name: string;
-  date: string;
-  start_time: string;
-  end_time: string;
-  venue: string;
-  info: string;
-  image: string;
-  price_min: number;
-  price_max: number;
-};
+export default function EventCard(props: any) {
+  const { event, Cart } = props;
+  const { cart, setCart, handleAddOne } = Cart;
 
-type EventCardProps = {
-  event: Event;
-  cart: any[];
-  setCart: (cart: any[]) => void;
-};
-
-export default function EventCard({ event, cart, setCart }: EventCardProps) {
   const addToCart = () => {
-    const existing = cart.find((e) => e.id === event.id);
-    if (existing) {
-      setCart(
-        cart.map((e) =>
-          e.id === event.id ? { ...e, quantity: e.quantity + 1 } : e
-        )
-      );
+    if (cart.some(i => i.id === event.id)) {
+      handleAddOne(event.id);
     } else {
       setCart([...cart, { ...event, quantity: 1 }]);
     }

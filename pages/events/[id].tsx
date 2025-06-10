@@ -21,11 +21,13 @@ type Event = {
 // Props expected from parent (likely passed down via a wrapper layout or context)
 type EventPageProps = {
   events: Event[];
-  cart: (Event & { quantity: number })[];
-  setCart: React.Dispatch<React.SetStateAction<(Event & { quantity: number })[]>>;
+  Cart: ReturnType<typeof import('@/context/useCart').default>;
 };
 
-export default function EventPage({ events, cart, setCart }: EventPageProps) {
+export default function EventPage(props: any) {
+  const { events, Cart } = props;
+  const { cart, setCart } = Cart;
+
   const { id } = useParams();
   const numericId = Number(id);
 
@@ -55,13 +57,10 @@ export default function EventPage({ events, cart, setCart }: EventPageProps) {
   const totalItems = cart.reduce((sum, e) => sum + e.quantity, 0);
 
   const addToCart = () => {
-    const existing = cart.find((e) => e.id === event?.id);
-    if (existing) {
-      setCart(
-        cart.map((e) =>
-          e.id === event?.id ? { ...e, quantity: e.quantity + 1 } : e
-        )
-      );
+    if (cart.some(e => e.id === event?.id)) {
+      setCart(cart.map(e =>
+        e.id === event?.id ? { ...e, quantity: e.quantity + 1 } : e,
+      ));
     } else if (event) {
       setCart([...cart, { ...event, quantity: 1 }]);
     }
