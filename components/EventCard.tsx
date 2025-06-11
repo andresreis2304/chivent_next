@@ -1,13 +1,14 @@
 import { link } from 'fs';
 import React from 'react';
 import Link from 'next/link'; 
+import { Chronos } from '@jstiava/chronos';
 
 export default function EventCard(props: any) {
   const { event, Cart } = props;
   const { cart, setCart, handleAddOne } = Cart;
 
   const addToCart = () => {
-    if (cart.some(i => i.id === event.id)) {
+    if (cart.some((i: { id: any; }) => i.id === event.id)) {
       handleAddOne(event.id);
     } else {
       setCart([...cart, { ...event, quantity: 1 }]);

@@ -5,7 +5,7 @@ export default function CartPage(props: any) {
   const { Cart } = props;
   const { cart, handleAddOne, handleRemoveOne, handleRemoveAll } = Cart;
 
-  const total = cart.reduce((s, e) => s + e.quantity, 0);
+  const total = cart.reduce((s: any, e: { quantity: any; }) => s + e.quantity, 0);
 
   return (
     <div style={{ width: '100vw', boxSizing: 'border-box', margin: 0 }}>
@@ -16,7 +16,7 @@ export default function CartPage(props: any) {
         {cart.length === 0 ? (
           <p>No events in the cart yet.</p>
         ) : (
-          cart.map((e) => (
+          cart.map((e: any) => (
             <div
               key={e.id}
               style={{

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 
+
 type Event = {
   id: string;                //string, not number
   name: string;
@@ -49,8 +50,8 @@ export default function EventPage(props: any) {
   const totalItems = cart.reduce((s: any, e: any) => s + e.quantity, 0);
 
   const addToCart = () => {
-    if (cart.some(e => e.id === event?.id)) {
-      setCart(cart.map(e =>
+    if (cart.some((e: { id: string | undefined; }) => e.id === event?.id)) {
+      setCart(cart.map((e: { id: string | undefined; quantity: number; }) =>
         e.id === event?.id ? { ...e, quantity: e.quantity + 1 } : e,
       ));
     } else if (event) {
