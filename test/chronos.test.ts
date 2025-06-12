@@ -50,3 +50,11 @@ test('injesting a utc date', async () => {
         y: local.format()
     });
 });
+
+test('my first test', async() => {
+    const x = dayjs();
+
+    console.log({
+        
+    })
+})
