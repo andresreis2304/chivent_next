@@ -1,27 +1,41 @@
+'use client';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { hasToken, clearToken } from '@/lib/auth';
 import Navbar from '@/components/Navbar';
 
+export default function AdminPage() {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-export default function Admin() {
-    const router = useRouter();
-    const [ready, setReady] = useState(false);
+  useEffect(() => {
+    fetch('/api/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.user) {
+          console.log('Logged in as:', data.user.username);
+          if (data.user.role === 'admin') {
+            setIsAdmin(true);
+          } else {
+            router.replace('/unauthorized');
+          }
+        } else {
+          router.replace('/login');
+        }
+      })
+      .catch(() => router.replace('/login'))
+      .finally(() => setReady(true));
+  }, [router]);
 
-    useEffect(() => {
-        fetch('/api/me')
-          .then(res => res.json())
-          .then(data => {
-            if (data.user) {
-              console.log('Logged in as:', data.user.username);
-            } else {
-              console.log('Not logged in');
-            }
-          });
-      }, []);
+  if (!ready) return null;
 
-    if (!ready) return null;
-
-    return <h1>Admin board. Only authorized users</h1>
-
+  return (
+    <>
+      <Navbar cartCount={0} />
+      <div style={{ padding: '2rem', textAlign: 'center' }}>
+        <h1>Admin Board</h1>
+        <p>Welcome, admin user.</p>
+      </div>
+    </>
+  );
 }

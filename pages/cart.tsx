@@ -31,7 +31,7 @@ export default function CartPage(props: any) {
               }}
             >
               <img
-                src={e.image}
+                src={e.image_url}
                 alt={e.name}
                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
               />

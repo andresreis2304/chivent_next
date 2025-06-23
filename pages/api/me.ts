@@ -1,14 +1,13 @@
 import { verify } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Pool } from 'pg';
-import cookie, { parse } from 'cookie';
+import { parse } from 'cookie';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log('Raw cookie header:', req.headers.cookie);
-    const cookies = req.headers.cookie ? parse(req.headers.cookie) : {};
-    const token = cookies.session;
+  const cookies = req.headers.cookie ? parse(req.headers.cookie) : {};
+  const token = cookies.session;
 
   if (!token) {
     return res.status(401).json({ message: 'Unauthorized: No token' });
@@ -19,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const userId = (decoded as any).user_id;
 
     const result = await pool.query(
-      'SELECT user_id, username, email FROM users WHERE user_id = $1',
+      'SELECT user_id, username, email, role FROM users WHERE user_id = $1',
       [userId]
     );
 
