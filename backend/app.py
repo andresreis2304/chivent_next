@@ -6,15 +6,13 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-API_KEY = "HvH3lxb9xqJ0EUvCag350ntAcn4Kx4Yh"  # fallback for dev
-
 @app.route('/')
 def hello():
     return "Hello World"
 
 @app.route('/events/all', methods=['GET'])
 def get_all_events():
-    url = f"https://app.ticketmaster.com/discovery/v2/events.json?apikey={API_KEY}&city=Chicago"
+    url = f"https://app.ticketmaster.com/discovery/v2/events.json?apikey={process.env.API_KEY}&city=Chicago"
     response = requests.get(url)
     data = response.json()
 

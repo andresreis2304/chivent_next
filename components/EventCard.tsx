@@ -8,8 +8,8 @@ export default function EventCard(props: any) {
   const { cart, setCart, handleAddOne } = Cart;
 
   const addToCart = () => {
-    if (cart.some((i: { id: any; }) => i.id === event.id)) {
-      handleAddOne(event.id);
+    if (cart.some((i: { event_id: any }) => i.event_id === event.event_id)) {
+      handleAddOne(event.event_id);
     } else {
       setCart([...cart, { ...event, quantity: 1 }]);
     }
@@ -27,7 +27,7 @@ export default function EventCard(props: any) {
       }}
     >
       <img
-        src={event.image}
+        src={event.image_url}
         alt={event.name}
         style={{ width: '150px', height: '150px', objectFit: 'cover' }}
       />
@@ -36,12 +36,9 @@ export default function EventCard(props: any) {
         <p>{event.date} • {event.venue}</p>
         <p>Start: {event.start_time} • End: {event.end_time}</p>
         <p>{event.info}</p>
-        <p>
-          Price: ${event.price_min.toFixed(2)} – ${event.price_max.toFixed(2)}
-        </p>
         <button onClick={addToCart}>Add to Cart</button>
         <Link
-          href={`/events/${event.id}`}
+          href={`/${event.event_id}`}
           style={{
             display: 'inline-block',
             marginLeft: '1rem',

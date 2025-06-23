@@ -13,7 +13,7 @@ export default function useCart() {
   const handleAddOne = (id: number) =>
     setCart(prev =>
       prev.map(e =>
-        e.id === id ? { ...e, quantity: e.quantity + 1 } : e,
+        e.event_id === id ? { ...e, quantity: e.quantity + 1 } : e,
       ),
     );
 
@@ -21,13 +21,13 @@ export default function useCart() {
     setCart(prev =>
       prev
         .map(e =>
-          e.id === id ? { ...e, quantity: e.quantity - 1 } : e,
+          e.event_id === id ? { ...e, quantity: e.quantity - 1 } : e,
         )
         .filter(e => e.quantity > 0),
     );
 
   const handleRemoveAll = (id: number) =>
-    setCart(prev => prev.filter(e => e.id !== id));
+    setCart(prev => prev.filter(e => e.event_id !== id));
 
   return { cart, setCart, handleAddOne, handleRemoveOne, handleRemoveAll };
 }

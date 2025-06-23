@@ -9,7 +9,7 @@ type NavbarProps = {
 };
 
 export default function Navbar({ cartCount }: NavbarProps) {
-  const Router = useRouter();
+  const router = useRouter();
 
   return (
     <nav
@@ -23,10 +23,29 @@ export default function Navbar({ cartCount }: NavbarProps) {
         borderBottom: '5px solid black',
       }}
     >
-      <div style={{ fontWeight: 'bold', fontSize: '24px' }}>
-        <Link href="/" style={{ color: 'white', textDecoration: 'none' }}>
-          Chivent
-        </Link>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <Link
+          href="/"
+          style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontWeight: 'bold',
+            fontSize: '24px',
+          }}
+        >Chivent</Link>
+
+        <button
+          onClick={() => router.push('/login')}
+          style={{
+            backgroundColor: 'white',
+            color: '#86af49',
+            border: 'none',
+            borderRadius: 4,
+            padding: '0.4rem 0.8rem',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+          }}
+        >Login</button>
       </div>
 
       <div style={{ fontSize: '20px' }}>
@@ -36,7 +55,7 @@ export default function Navbar({ cartCount }: NavbarProps) {
       <div>
         <Link onClick={(e)=>{
           e.preventDefault()
-          Router.push('/cart')}} href="/cart" style={{ color: 'white', textDecoration: 'none' }}>
+          router.push('/cart')}} href="/cart" style={{ color: 'white', textDecoration: 'none' }}>
           🛒
         </Link>
         <span style={{ marginLeft: '0.5rem' }}>

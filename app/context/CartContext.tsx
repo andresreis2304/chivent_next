@@ -4,7 +4,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 export type CartItem = {
-  id: number;
+  event_id: number;
   name: string;
   date: string;
   place: string;

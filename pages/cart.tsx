@@ -18,7 +18,7 @@ export default function CartPage(props: any) {
         ) : (
           cart.map((e: any) => (
             <div
-              key={e.id}
+              key={e.event_id}
               style={{
                 border: '8px solid #86af49',
                 backgroundColor: '#FFF',
@@ -40,9 +40,9 @@ export default function CartPage(props: any) {
                 <p style={{ margin: 0 }}>{e.date} • {e.place}</p>
                 <p style={{ margin: '0.25rem 0 0 0' }}>Qty: {e.quantity}</p>
               </div>
-              <button onClick={() => Cart.handleAddOne(e.id)}>+</button>
-              <button onClick={() => Cart.handleRemoveOne(e.id)}>-</button>
-              <button onClick={() => Cart.handleRemoveAll(e.id)}>Remove</button>
+              <button onClick={() => handleAddOne(e.event_id)}>+</button>
+              <button onClick={() => handleRemoveOne(e.event_id)}>-</button>
+              <button onClick={() => handleRemoveAll(e.event_id)}>Remove</button>
             </div>
           ))
         )}

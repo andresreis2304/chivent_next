@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 
-
 type Event = {
-  id: string;                //string, not number
+  event_id: string;
   name: string;
   date: string;
   start_time: string;
@@ -22,22 +21,32 @@ export default function EventPage(props: any) {
   const { cart, setCart } = Cart;
   const router = useRouter();
 
-  const [event, setEvent]   = useState<Event | null>(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  console.log("router.query.id:", router.query.id);
 
-  /* fetch once router is ready */
   useEffect(() => {
     if (!router.isReady) return;
-
+  
     const idParam = router.query.id;
-    if (typeof idParam !== 'string') {
+  
+    if (!idParam || Array.isArray(idParam)) {
       setNotFound(true);
       setLoading(false);
       return;
     }
-
-    fetch(`http://127.0.0.1:5000/events/${encodeURIComponent(idParam)}`)   // string id
+  
+    const eventId = parseInt(idParam, 10);
+    if (isNaN(eventId)) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+  
+    console.log("Fetching event with ID:", eventId);
+  
+    fetch(`/api/events/${eventId}`)
       .then(res => {
         if (!res.ok) throw new Error('404');
         return res.json();
@@ -46,20 +55,25 @@ export default function EventPage(props: any) {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [router.isReady, router.query.id]);
+  
 
   const totalItems = cart.reduce((s: any, e: any) => s + e.quantity, 0);
 
   const addToCart = () => {
-    if (cart.some((e: { id: string | undefined; }) => e.id === event?.id)) {
-      setCart(cart.map((e: { id: string | undefined; quantity: number; }) =>
-        e.id === event?.id ? { ...e, quantity: e.quantity + 1 } : e,
-      ));
-    } else if (event) {
+    if (!event) return;
+
+    const exists = cart.some((e: { event_id: string }) => e.event_id === event.event_id);
+    if (exists) {
+      setCart(
+        cart.map((e: { event_id: string; quantity: number }) =>
+          e.event_id === event.event_id ? { ...e, quantity: e.quantity + 1 } : e
+        )
+      );
+    } else {
       setCart([...cart, { ...event, quantity: 1 }]);
     }
   };
 
-  /* render states  */
   if (loading) {
     return (
       <div style={{ width: '100vw' }}>
@@ -82,30 +96,42 @@ export default function EventPage(props: any) {
     );
   }
 
-  /*success view */
   return (
     <div style={{ width: '100vw' }}>
       <Navbar cartCount={totalItems} />
-      <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column',
-                    alignItems: 'center', gap: '1rem' }}>
+      <div
+        style={{
+          padding: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem',
+        }}
+      >
         <h1>{event.name}</h1>
 
-        <img src={event.image} alt={event.name}
-             style={{ width: 300, height: 300, objectFit: 'cover' }} />
+        <img
+          src={event.image}
+          alt={event.name}
+          style={{ width: 300, height: 300, objectFit: 'cover' }}
+        />
 
-        <p><strong>Date:</strong> {event.date}</p>
-        <p><strong>Start:</strong> {event.start_time}</p>
-        <p><strong>End:</strong> {event.end_time}</p>
-        <p><strong>Venue:</strong> {event.venue}</p>
+        <p>
+          <strong>Date:</strong> {event.date}
+        </p>
+        <p>
+          <strong>Start:</strong> {event.start_time}
+        </p>
+        <p>
+          <strong>End:</strong> {event.end_time}
+        </p>
+        <p>
+          <strong>Venue:</strong> {event.venue}
+        </p>
 
-        {event.price_min !== null && (
-          <p style={{ fontSize: '1rem', color: 'gray' }}>
-            Min Price ${event.price_min.toFixed(2)}<br />
-            Max Price ${event.price_max.toFixed(2)}
-          </p>
-        )}
-
-        <p style={{ maxWidth: 600 }}><strong>Info:</strong> {event.info}</p>
+        <p style={{ maxWidth: 600 }}>
+          <strong>Info:</strong> {event.info}
+        </p>
 
         <button onClick={addToCart}>Add to Cart</button>
       </div>

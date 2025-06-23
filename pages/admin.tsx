@@ -8,10 +8,17 @@ export default function Admin() {
     const router = useRouter();
     const [ready, setReady] = useState(false);
 
-    useEffect(()=> {
-        if (hasToken())setReady(true);
-        else router.replace('/login');
-    },[router]);
+    useEffect(() => {
+        fetch('/api/me')
+          .then(res => res.json())
+          .then(data => {
+            if (data.user) {
+              console.log('Logged in as:', data.user.username);
+            } else {
+              console.log('Not logged in');
+            }
+          });
+      }, []);
 
     if (!ready) return null;
 

@@ -7,6 +7,7 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('')
 
   const [isError, setError] = useState(false);
   const [loading, setLoading]   = useState(false);
@@ -25,12 +26,12 @@ export default function LoginPage() {
         return;
     }
 
-    const response = await fetch('/api/login', {
+    const response = await fetch('/api/signUp', {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({username, password})
+        body: JSON.stringify({email, username, password})
     })
 
     if (!response.ok) {
@@ -41,7 +42,7 @@ export default function LoginPage() {
     }
 
     const data = await response.json();
-    console.log("Login successful");
+    console.log("Sign up successful");
     router.push('/admin')
 
 };
@@ -61,14 +62,29 @@ export default function LoginPage() {
           textAlign: 'center',
         }}
       >
-        <h1>Login</h1>
+        <h1>Sign Up</h1>
 
         <form onSubmit={handleSubmit} style={{ marginTop: '1.5rem' }}>
+        <input
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            autoComplete="email"
+            style={{
+              width: '100%',
+              marginBottom: '0.8rem',
+              padding: '0.5rem',
+              borderRadius: 4,
+              border: '1px solid #999',
+            }}
+          />
+
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username or e-mail"
+            placeholder="Username"
             autoComplete="username"
             style={{
               width: '100%',
@@ -102,29 +118,14 @@ export default function LoginPage() {
               padding: '0.6rem',
               background: loading ? '#9dbb6e' : '#86af49',
               color: '#fff',
-              border: 'bold',
+              border: 'none',
               borderRadius: 4,
               cursor: loading ? 'not-allowed' : 'pointer',
             }}
           >
-            {loading ? 'Signing in…' : 'Submit'}
+            {loading ? 'Signing up…' : 'Sign Up'}
           </button>
         </form>
-        <button
-          onClick={() => router.push('/signUp')}
-          style={{
-            marginTop: '1rem', 
-            width: '100%',
-            backgroundColor: '#86af49',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            padding: '0.6rem',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          }}
-        >Sign Up</button>
-
       </div>
     </div>
   );

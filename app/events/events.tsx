@@ -27,7 +27,8 @@ type EventPageProps = {
 };
 
 export default function EventPage({ events, cart, setCart }: EventPageProps) {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string | undefined;
   const numericId = Number(id);
 
   const [event, setEvent] = useState<Event | null>(null);

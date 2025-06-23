@@ -5,7 +5,7 @@ import EventCard from '@/components/EventCard';
 import type useCart from '@/context/useCart';
 
 type EventType = {
-  id: number;
+  event_id: number;
   name: string;
   date: string;
   image: string;
@@ -27,7 +27,7 @@ export default function HomePage(props: any) {
   const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/events/all')
+    fetch('/api/events')
       .then(res => res.json())
       .then(setEvents)
       .catch(err => console.error('Error fetching events:', err));
@@ -40,7 +40,7 @@ export default function HomePage(props: any) {
       <Navbar cartCount={total} />
       <div style={{ padding: '2rem' }}>
         {events.map(e => (
-          <EventCard key={e.id} event={e} Cart={Cart} />
+          <EventCard key={e.event_id} event={e} Cart={Cart} />
         ))}
       </div>
     </div>
