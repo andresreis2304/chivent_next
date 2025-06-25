@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import EventForm from '@/components/eventForm';
-import Link from 'next/link';
+
 
 type Event = {
   event_id: string;
@@ -20,7 +20,7 @@ export default function AdminPage() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [mode, setMode] = useState<'create' | 'edit' | null>('create');
+  //const [mode, setMode] = useState<'create' | 'edit' | null>('create');
   const [events, setEvents] = useState<Event[]>([]);
   //const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
@@ -31,7 +31,7 @@ export default function AdminPage() {
         if (data.user?.role === 'admin') {
           setIsAdmin(true);
         } else {
-          router.replace('/unauthorized');
+          router.replace('/');
         }
       })
       .catch(() => router.replace('/login'))
