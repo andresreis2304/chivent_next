@@ -10,7 +10,7 @@ type Event = {
   start_time: string;
   end_time: string;
   venue: string;
-  image: string;
+  image_url: string;
   info: string;
   price_min: number;
   price_max: number;
@@ -111,7 +111,7 @@ export default function EventPage(props: any) {
         <h1>{event.name}</h1>
 
         <img
-          src={event.image}
+          src={event.image_url}
           alt={event.name}
           style={{ width: 300, height: 300, objectFit: 'cover' }}
         />
