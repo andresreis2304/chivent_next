@@ -22,7 +22,7 @@ export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [mode, setMode] = useState<'create' | 'edit' | null>('create');
   const [events, setEvents] = useState<Event[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  //const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
 
   useEffect(() => {
     fetch('/api/me')
@@ -48,7 +48,6 @@ export default function AdminPage() {
 
   useEffect(() => { if (isAdmin) refresh(); }, [isAdmin]);
 
-  /*  ────────────────────────  CRUD  ──────────────────────── */
   const handleCreate = async (data: any) => {
     const ok = await fetch('/api/events/create', {
       method : 'POST',
@@ -78,14 +77,12 @@ export default function AdminPage() {
 
   if (!ready) return null;
 
-  /*  ────────────────────────  UI  ──────────────────────── */
   return (
     <>
       <Navbar cartCount={0} />
       <div style={{padding:'2rem'}}>
         <h1>Admin Dashboard</h1>
 
-        {/* ── list ─────────────────────────────────────────── */}
         <h2>Existing Events</h2>
         {events.length === 0 && <p>No events yet.</p>}
         <ul>
@@ -98,7 +95,6 @@ export default function AdminPage() {
           ))}
         </ul>
 
-        {/* ── form ─────────────────────────────────────────── */}
         <h2 style={{marginTop:'2rem'}}>
           {isEditing ? 'Edit Event' : 'Create New Event'}
         </h2>

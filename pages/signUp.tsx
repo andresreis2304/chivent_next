@@ -43,7 +43,7 @@ export default function LoginPage() {
 
     const data = await response.json();
     console.log("Sign up successful");
-    router.push('/admin')
+    router.push('/')
 
 };
 

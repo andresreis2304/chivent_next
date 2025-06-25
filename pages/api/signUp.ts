@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import cookie, {serialize} from 'cookie';
+import cookie, { serialize } from 'cookie';
 import jwt from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Pool } from 'pg';
@@ -45,7 +45,7 @@ export default async function handleRequest(req: NextApiRequest, res: NextApiRes
     );
 
     
-    res.setHeader('Set-Cookie', cookie.serialize('session', token, {
+    res.setHeader('Set-Cookie', serialize('session', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
