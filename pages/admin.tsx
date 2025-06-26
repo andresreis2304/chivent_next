@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import EventForm from '@/components/eventForm';
 
-
 type Event = {
   event_id: string;
   name: string;

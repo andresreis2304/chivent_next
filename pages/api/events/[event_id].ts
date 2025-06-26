@@ -31,10 +31,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     case 'PUT':
       const {name, event_date, location, image_url, start_time, end_time, info} = req.body;
-      if (!name || !event_date || !location) {
-        return res.status(400).json({ message: 'Missing required fields' });
-      }
-
+      // if (!name || !event_date || !location) {
+      //   return res.status(400).json({ message: 'Missing required fields' });
+      // }
       try{
         const { rowCount } = await pool.query(
           `UPDATE events

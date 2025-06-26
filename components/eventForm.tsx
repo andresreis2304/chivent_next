@@ -1,31 +1,53 @@
 'use client';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UploadForm from './UploadForm';
 
-export default function EventForm({ onSubmit, initialData = null }: {
-  onSubmit: (data: any) => void;
+type FormState = {
+  name: string;
+  event_date: string;
+  start_time: string;
+  end_time: string;
+  location: string; 
+  info: string;
+  image_url: string;
+};
+
+export default function EventForm({
+  onSubmit,
+  initialData = null,
+}: {
+  onSubmit: (data: FormState) => void;
   initialData?: any;
 }) {
-  const [form, setForm] = useState({
-    name: initialData?.name || '',
-    date: initialData?.date || '',
-    start_time: initialData?.start_time || '',
-    end_time: initialData?.end_time || '',
-    venue: initialData?.venue || '',
-    info: initialData?.info || '',
-    image: initialData?.image || '',
+  const [form, setForm] = useState<FormState>({
+    name: initialData?.name ?? '',
+    event_date: initialData?.event_date ?? '',
+    start_time: initialData?.start_time ?? '',
+    end_time: initialData?.end_time ?? '',
+    location: initialData?.location ?? '',
+    info: initialData?.info ?? '',
+    image_url:  initialData?.image_url ?? '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleUpload = (images: any[]) => {
-    if (images.length > 0) {
-      setForm(prev => ({ ...prev, image: images[0].url }));
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        name: initialData.name ?? '',
+        event_date: initialData.event_date ?? '',
+        start_time: initialData.start_time ?? '',
+        end_time: initialData.end_time   ?? '',
+        location: initialData.location   ?? '',
+        info: initialData.info       ?? '',
+        image_url: initialData.image_url  ?? '',
+      });
     }
-  };
+  }, [initialData]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+
+  const handleUpload = (f: { url: string }[]) =>
+    f.length && setForm(p => ({ ...p, image_url: f[0].url }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,18 +55,20 @@ export default function EventForm({ onSubmit, initialData = null }: {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 600, margin: '2rem auto' }}>
+    <form onSubmit={handleSubmit} style={{ maxWidth: 600, margin: '2rem auto', display:'flex', flexDirection:'column', gap:8 }}>
       <input name="name" value={form.name} onChange={handleChange} placeholder="Event Name" required />
-      <input name="date" value={form.date} onChange={handleChange} placeholder="Date (YYYY-MM-DD)" required />
+      <input name="event_date" value={form.event_date} onChange={handleChange} type="date" required />
       <input name="start_time" value={form.start_time} onChange={handleChange} placeholder="Start Time" required />
       <input name="end_time" value={form.end_time} onChange={handleChange} placeholder="End Time" required />
-      <input name="venue" value={form.venue} onChange={handleChange} placeholder="Venue" required />
+      <input name="location" value={form.location} onChange={handleChange} placeholder="Location" required />
       <textarea name="info" value={form.info} onChange={handleChange} placeholder="Event Info" required />
-      
-      <p>Upload Event Image:</p>
+
+      <p style={{ margin: '8px 0 0' }}>Upload Event Image:</p>
       <UploadForm onAdd={handleUpload} />
 
-      <button type="submit">Submit</button>
+      {form.image_url && <img src={form.image_url} style={{ maxWidth: 200, marginTop: 8 }} />}
+
+      <button type="submit" style={{ marginTop: 12 }}>Submit</button>
     </form>
   );
 }
