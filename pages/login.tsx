@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
+import { enqueueSnackbar } from 'notistack';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,14 +35,16 @@ export default function LoginPage() {
     })
 
     if (!response.ok) {
-        console.log("Something went wrong.")
+        enqueueSnackbar('Something went wrong. Please try again.', {
+            variant: 'error',
+          });
         setError(true);
         setPassword('');
         return;
     }
 
     const data = await response.json();
-    console.log("Login successful");
+    enqueueSnackbar('Signed up successfully! 🎉', { variant: 'success' });
     router.push('/admin')
 
 };

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import EventForm from '@/components/eventForm';
 import Navbar from '@/components/Navbar';
+import { enqueueSnackbar } from 'notistack';
 
 export default function EditPage() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function EditPage() {
       .then(res => res.json())
       .then(data => {
         if (data.user?.role !== 'admin') {
-          router.replace('/unauthorized');
+          router.replace('/unathorized');
         }
       })
       .catch(() => router.replace('/login'))
@@ -39,10 +40,10 @@ export default function EditPage() {
     });
 
     if (res.ok) {
-      alert('Event updated!');
+      enqueueSnackbar('Edit made successfully! 🎉', { variant: 'success' });
       router.push('/admin');
     } else {
-      alert('Update failed.');
+      enqueueSnackbar('Edit failed', { variant: 'error' });
     }
   };
 

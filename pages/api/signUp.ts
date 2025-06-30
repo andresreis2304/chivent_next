@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Pool } from 'pg';
 
-const pool = new Pool({ connectionString: "postgres://postgres:28327677ARr$@localhost:5432/postgres" });
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 export default async function handleRequest(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {

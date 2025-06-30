@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar(); 
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +22,7 @@ export default function LoginPage() {
     console.log('Log in button pressed.');
     const allValuesFilled = username.trim() !== '' && password.trim() !== '';
     if (!allValuesFilled) {
-        console.log("Not all fields are filled.")
+        enqueueSnackbar('Please fill in all fields.', { variant: 'warning' });
         setError(true);
         setPassword('');
         return;
@@ -35,14 +37,16 @@ export default function LoginPage() {
     })
 
     if (!response.ok) {
-        console.log("Something went wrong.")
+      enqueueSnackbar('Something went wrong. Please try again.', {
+        variant: 'error',
+      });
         setError(true);
         setPassword('');
         return;
     }
 
     const data = await response.json();
-    console.log("Sign up successful");
+    enqueueSnackbar('Signed up successfully! 🎉', { variant: 'success' });
     router.push('/')
 
 };

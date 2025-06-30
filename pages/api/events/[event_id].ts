@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { enqueueSnackbar } from 'notistack';
 import { Pool } from 'pg';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -52,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ? res.status(200).json({ message: 'Event updated' })
           : res.status(404).json({ message: 'Event not found' });
       } catch (err) {
-        console.error('PUT error:', err);
+        
         return res.status(500).json({ message: 'Failed to update event' });
       }
 
@@ -66,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             ? res.status(200).json({ message: 'Event deleted' })
             : res.status(404).json({ message: 'Event not found' });
           } catch (err) {
-          console.error('DELETE error:', err);
+            
           return res.status(500).json({ message: 'Failed to delete event' });
         }
 

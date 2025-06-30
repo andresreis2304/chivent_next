@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import EventForm from '@/components/eventForm';
+import { enqueueSnackbar } from 'notistack';
 
 type Event = {
   event_id: string;
@@ -53,7 +54,11 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(data),
     }).then(r => r.ok);
-    ok ? (alert('Created'), refresh()) : alert('Create failed');
+    ok ? (enqueueSnackbar('Event updated succesfully', {
+      variant: 'success',
+    }), refresh()) :  enqueueSnackbar('Something went wrong. Please try again.', {
+      variant: 'error',
+    });
   };
 
   const handleUpdate = async (data: any) => {
@@ -63,15 +68,23 @@ export default function AdminPage() {
       headers: { 'Content-Type': 'application/json' },
       body   : JSON.stringify(data),
     }).then(r => r.ok);
-    ok ? (alert('Updated'), setSelected(null), refresh())
-       :  alert('Update failed');
+    ok ? (enqueueSnackbar('Event updated succesfully', {
+      variant: 'success',
+    }), setSelected(null), refresh())
+       :  enqueueSnackbar('Something went wrong. Please try again.', {
+        variant: 'error',
+      });
   };
 
   const handleDelete = async (ev: Event) => {
     if (!confirm(`Delete "${ev.name}"?`)) return;
-    const ok = await fetch(`/api/events/${ev.event_id}`, { method: 'DELETE' })
-              .then(r => r.ok);
-    ok ? refresh() : alert('Delete failed');
+    const ok = await fetch(`/api/events/${ev.event_id}`, { 
+      method: 'DELETE' }).then(r => r.ok);
+    ok ? (enqueueSnackbar('Event updated succesfully', {
+      variant: 'success',
+    }),refresh()) : enqueueSnackbar('Something went wrong. Please try again.', {
+      variant: 'error',
+    });
   };
 
   if (!ready) return null;
