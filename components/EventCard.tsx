@@ -2,6 +2,7 @@ import { link } from 'fs';
 import React from 'react';
 import Link from 'next/link'; 
 import { Chronos } from '@jstiava/chronos';
+import { enqueueSnackbar } from 'notistack';
 
 export default function EventCard(props: any) {
   const { event, Cart } = props;
@@ -10,8 +11,10 @@ export default function EventCard(props: any) {
   const addToCart = () => {
     if (cart.some((i: { event_id: any }) => i.event_id === event.event_id)) {
       handleAddOne(event.event_id);
+      enqueueSnackbar('Event added successfully', { variant: 'success' });
     } else {
       setCart([...cart, { ...event, quantity: 1 }]);
+      enqueueSnackbar('Event added successfully', { variant: 'success' });
     }
   };
 

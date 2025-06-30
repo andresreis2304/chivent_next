@@ -1,5 +1,6 @@
 'use client';
 import Navbar from '@/components/Navbar';
+import { enqueueSnackbar } from 'notistack';
 
 export default function CartPage(props: any) {
   const { Cart } = props;
@@ -42,7 +43,9 @@ export default function CartPage(props: any) {
               </div>
               <button onClick={() => handleAddOne(e.event_id)}>+</button>
               <button onClick={() => handleRemoveOne(e.event_id)}>-</button>
-              <button onClick={() => handleRemoveAll(e.event_id)}>Remove</button>
+              <button onClick={() => {handleRemoveAll(e.event_id);
+                enqueueSnackbar('Event deleted from cart', { variant: 'success' });
+              }}>Remove</button>
             </div>
           ))
         )}
