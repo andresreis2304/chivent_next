@@ -91,35 +91,59 @@ export default function AdminPage() {
 
   return (
     <>
-      <Navbar cartCount={0} />
-      <div style={{padding:'2rem'}}>
-        <h1>Admin Dashboard</h1>
+  <Navbar cartCount={0} />
+  <div style={{ padding: '2rem' }}>
+    <h1>Admin Dashboard</h1>
 
-        <h2>Existing Events</h2>
-        {events.length === 0 && <p>No events yet.</p>}
-        <ul>
-          {events.map(ev => (
-            <li key={ev.event_id} style={{marginBottom:4}}>
-              {ev.name}{' '}
-              <button onClick={() => setSelected(ev)}>Edit</button>{' '}
-              <button onClick={() => handleDelete(ev)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+    <h2>Existing Events</h2>
+    {events.length === 0 && <p>No events yet.</p>}
 
-        <h2 style={{marginTop:'2rem'}}>
-          {isEditing ? 'Edit Event' : 'Create New Event'}
-        </h2>
-        <EventForm
-          initialData={selected}
-          onSubmit={isEditing ? handleUpdate : handleCreate}
-        />
-        {isEditing && (
-          <p>
-            <button onClick={() => setSelected(null)}>Cancel edit</button>
-          </p>
-        )}
-      </div>
-    </>
+    {/* ───── GRID CONTAINER ───── */}
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+        gap: '1rem',
+        marginBottom: '2rem',
+      }}
+    >
+      {events.map((ev) => (
+        <div
+          key={ev.event_id}
+          style={{
+            border: '1px solid #e5e5e5',
+            borderRadius: 8,
+            padding: '1rem',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.07)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <h3 style={{ margin: 0 }}>{ev.name}</h3>
+          {/* add more info if you like: date, location, image, etc. */}
+          <div style={{ marginTop: 'auto' }}>
+            <button onClick={() => setSelected(ev)} style={{ marginRight: 8 }}>
+              Edit
+            </button>
+            <button onClick={() => handleDelete(ev)}>Delete</button>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* ───── FORM ───── */}
+    <h2>{isEditing ? 'Edit Event' : 'Create New Event'}</h2>
+    <EventForm
+      initialData={selected}
+      onSubmit={isEditing ? handleUpdate : handleCreate}
+    />
+    {isEditing && (
+      <p>
+        <button onClick={() => setSelected(null)}>Cancel edit</button>
+      </p>
+    )}
+  </div>
+</>
+
   );
 }
